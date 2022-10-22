@@ -37,7 +37,7 @@ int process_scheduler(std::unordered_map<int, int> plist) {
 
         int waiting_size = waiting.size();
         for(int i = 0; i < waiting_size; i++) {
-            if(waiting.top() > 1) {
+            if(waiting.top() >= 1) {
                 waiting.top() = waiting.top()--;
             }
             main.push(waiting.top());
