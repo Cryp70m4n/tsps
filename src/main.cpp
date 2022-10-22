@@ -9,9 +9,11 @@ int process_scheduler(std::unordered_map<int, int> plist) {
     std::stack<int> main;
     std::stack<int> execute;
     std::stack<int> waiting;
+
+    for (auto pid : plist)
+        main.push(pid.first);
+
     while (plist.size() > 0) {
-        for (auto pid : plist)
-            main.push(pid.first);
         
         execute.push(main.top());
         main.pop();
@@ -19,7 +21,7 @@ int process_scheduler(std::unordered_map<int, int> plist) {
         int main_size = main.size();
         for(int i = 0; i < main_size; i++)
         {
-            if(plist[main.top()] < plist[execute.top()]) {
+            if(plist[main.top()] <= plist[execute.top()]) {
                 execute.push(main.top());
             }
             else {
@@ -27,7 +29,8 @@ int process_scheduler(std::unordered_map<int, int> plist) {
             }
             main.pop();
         }
-        
+
+
         while(execute.size()) {
             //EXECUTE PROCESS HERE
             std::cout << "Execution:" << "PID:" << execute.top() << "|PRIORITY:" << plist[execute.top()] << "\n";
@@ -35,11 +38,12 @@ int process_scheduler(std::unordered_map<int, int> plist) {
             execute.pop();
         }
 
+
         int waiting_size = waiting.size();
         for(int i = 0; i < waiting_size; i++) {
-            if(waiting.top() >= 1) {
-                waiting.top() = waiting.top()--;
-            }
+            if(plist[waiting.top()] >= 1)
+                plist[waiting.top()] = plist[waiting.top()]-1;
+            
             main.push(waiting.top());
             waiting.pop();
         }
